@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
 
     bannerAd = BannerAd(
       size: AdSize.banner,
-      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Test ID from Google
+      adUnitId: 'ca-app-pub-3940256099942544/6300978111', // Test ID
       listener: BannerAdListener(),
       request: const AdRequest(),
     )..load();
@@ -37,7 +37,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<HomeViewModel>(context);
-
     viewModel.loadProfiles();
 
     return Scaffold(
@@ -67,6 +66,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
+          // --- Кнопка GitHub ---
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton.icon(
@@ -78,6 +78,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
+          // --- Кнопка Resume Builder ---
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: ElevatedButton.icon(
@@ -85,6 +86,18 @@ class _HomePageState extends State<HomePage> {
               label: const Text("Resume Builder"),
               onPressed: () {
                 context.go('/resume-builder');
+              },
+            ),
+          ),
+
+          // --- НОВА КНОПКА: Переглянути на мапі ---
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: ElevatedButton.icon(
+              icon: const Icon(Icons.map),
+              label: const Text("Переглянути на мапі"),
+              onPressed: () {
+                context.go('/map');
               },
             ),
           ),
