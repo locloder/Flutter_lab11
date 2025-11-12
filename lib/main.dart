@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart'; 
 import 'package:provider/provider.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'dart:io' show Platform; 
 
 import 'package:my_personal_app/app_router.dart';
 import 'package:my_personal_app/viewmodels/home_viewmodel.dart';
@@ -9,16 +11,14 @@ import 'package:my_personal_app/viewmodels/github_viewmodel.dart';
 import 'package:my_personal_app/models/repositories/user_profile_repository.dart';
 import 'package:my_personal_app/models/repositories/github_repository.dart';
 import 'package:my_personal_app/services/local_storage_service.dart';
-import 'dart:io' show Platform;
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  if (Platform.isAndroid || Platform.isIOS) {
-    await MobileAds.instance.initialize();
+  if (!kIsWeb) {
+    if (Platform.isAndroid || Platform.isIOS) {
+      await MobileAds.instance.initialize();
+    }
   }
 
   final localStorageService = LocalStorageService();
@@ -26,12 +26,14 @@ Future<void> main() async {
     localStorageService: localStorageService,
   );
 
-  await userProfileRepository.initialize();
+  await userProfileRepository.initialize(); 
 
   runApp(
     MultiProvider(
       providers: [
         Provider<UserProfileRepository>(create: (_) => userProfileRepository),
+        Provider<GitHubRepository>(create: (_) => GitHubRepository()),
+        
         ChangeNotifierProvider(
           create: (context) =>
               HomeViewModel(repository: userProfileRepository),
@@ -42,7 +44,6 @@ Future<void> main() async {
                 Provider.of<UserProfileRepository>(context, listen: false),
           ),
         ),
-        Provider<GitHubRepository>(create: (_) => GitHubRepository()),
         ChangeNotifierProvider(
           create: (context) => GitHubViewModel(
             repository:
@@ -54,6 +55,7 @@ Future<void> main() async {
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
